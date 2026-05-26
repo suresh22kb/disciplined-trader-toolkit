@@ -1,15 +1,14 @@
 """The Survivor's Toolkit — public download page.
 
-Deployed on Streamlit Community Cloud. URL: https://disciplined-trader-toolkit.streamlit.app/
+Aligned visually with sureshbalaraman.com — the brand owner's primary site.
+Electric-cyan accent, uppercase mono system names, sans + mono mix, anti-fluff
+voice ("Finance isn't creative writing"), WhatsApp-first contact.
 
-Serves three free .xlsx sheets for Indian F&O traders, with a brand-story hero,
-a "why these three" framing section, the download cards, a paid-catalog
-"when you outgrow these" reveal, soft custom-build CTA via X DM (no
-track-specific keyword to avoid preempting Day 15 STACK launch), trust
-signals, and an educational disclaimer footer.
+Supports BOTH light and dark themes via prefers-color-scheme media queries.
+Default = follow system preference.
 
-Brand: The Quiet Operator. Deep-ink canvas (0A0E1A), mono numbers
-(JetBrains Mono / Consolas), signal-orange accent (F26B1F).
+Toolkit content is 100% free. The paid catalog lives at sureshbalaraman.com —
+this page links there once, in the "when you outgrow these" section.
 """
 from __future__ import annotations
 
@@ -19,160 +18,217 @@ import streamlit as st
 
 TOOLKIT_DIR = Path(__file__).resolve().parent / "toolkit"
 
+WHATSAPP_URL = "https://wa.me/919677477233"
+EMAIL = "suresh2kb@gmail.com"
+MAIN_SITE = "https://www.sureshbalaraman.com/"
+
 st.set_page_config(
-    page_title="The Survivor's Toolkit — Disciplined Trader",
+    page_title="The Survivor's Toolkit · Suresh Balaraman",
     page_icon=None,
     layout="centered",
     initial_sidebar_state="collapsed",
 )
 
-# --- Brand CSS -------------------------------------------------------------
+# --- Theme tokens via CSS custom properties --------------------------------
+# Two themes: dark (default) + light (via prefers-color-scheme: light).
+# All component CSS reads from these tokens — change here, propagate everywhere.
 
 st.markdown(
     """
     <style>
-    /* Hide chrome */
+    /* ---------- Theme tokens ---------- */
+    :root {
+        --bg: #0A0E1A;
+        --surface: #111827;
+        --surface-alt: #0F172A;
+        --border: #1F2937;
+        --text-primary: #E5E7EB;
+        --text-secondary: #94A3B8;
+        --text-quiet: #64748B;
+        --accent: #22D3EE;
+        --accent-dim: rgba(34, 211, 238, 0.12);
+        --btn-bg: #1F2937;
+        --btn-bg-hover: #22D3EE;
+        --btn-text: #E5E7EB;
+        --btn-text-hover: #0A0E1A;
+        --btn-border: #374151;
+    }
+
+    @media (prefers-color-scheme: light) {
+        :root {
+            --bg: #FAFAFA;
+            --surface: #FFFFFF;
+            --surface-alt: #F4F4F5;
+            --border: #E4E4E7;
+            --text-primary: #18181B;
+            --text-secondary: #52525B;
+            --text-quiet: #71717A;
+            --accent: #0891B2;
+            --accent-dim: rgba(8, 145, 178, 0.10);
+            --btn-bg: #F4F4F5;
+            --btn-bg-hover: #0891B2;
+            --btn-text: #18181B;
+            --btn-text-hover: #FFFFFF;
+            --btn-border: #E4E4E7;
+        }
+    }
+
+    /* ---------- Chrome hide ---------- */
     [data-testid="stSidebar"] { display: none; }
     [data-testid="collapsedControl"] { display: none; }
     #MainMenu { visibility: hidden; }
     footer { visibility: hidden; }
     header { visibility: hidden; }
 
-    /* Canvas */
-    .stApp { background-color: #0A0E1A; }
-    .main .block-container { max-width: 760px; padding-top: 3.5rem; padding-bottom: 4rem; }
+    /* ---------- Canvas ---------- */
+    .stApp { background-color: var(--bg) !important; }
+    .main .block-container {
+        max-width: 760px;
+        padding-top: 3.5rem;
+        padding-bottom: 4rem;
+    }
 
-    /* Type scale */
+    /* ---------- Hero ---------- */
     .qo-eyebrow {
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        font-family: 'JetBrains Mono', 'Consolas', monospace;
         font-size: 11px;
-        letter-spacing: 3px;
-        color: #94A3B8;
+        letter-spacing: 2.5px;
+        color: var(--accent);
         text-transform: uppercase;
         margin-bottom: 1rem;
     }
     .qo-title {
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-        font-size: 42px;
+        font-size: 44px;
         font-weight: 700;
-        color: #E5E7EB;
-        line-height: 1.1;
-        margin-bottom: 0.5rem;
-        letter-spacing: -0.02em;
+        color: var(--text-primary);
+        line-height: 1.05;
+        margin-bottom: 0.75rem;
+        letter-spacing: -0.025em;
     }
     .qo-subtitle {
         font-family: 'Inter', -apple-system, sans-serif;
-        font-size: 17px;
-        color: #94A3B8;
-        line-height: 1.55;
-        margin-bottom: 1.75rem;
+        font-size: 18px;
+        color: var(--text-secondary);
+        line-height: 1.5;
+        margin-bottom: 2rem;
+        max-width: 600px;
     }
     .qo-rule {
         height: 2px;
-        background: #F26B1F;
-        width: 64px;
-        margin-bottom: 2.75rem;
+        background: var(--accent);
+        width: 56px;
+        margin-bottom: 3rem;
     }
     .qo-rule-thin {
         height: 1px;
-        background: #1F2937;
-        margin: 2.5rem 0;
+        background: var(--border);
+        margin: 3rem 0;
     }
 
-    /* Section headers */
+    /* ---------- Section headers ---------- */
     .qo-section-eyebrow {
         font-family: 'JetBrains Mono', 'Consolas', monospace;
         font-size: 10px;
         letter-spacing: 2.5px;
-        color: #F26B1F;
+        color: var(--accent);
         text-transform: uppercase;
-        margin-bottom: 0.5rem;
-        margin-top: 1.5rem;
+        margin-bottom: 0.75rem;
     }
     .qo-section-title {
         font-family: 'Inter', -apple-system, sans-serif;
-        font-size: 26px;
+        font-size: 28px;
         font-weight: 600;
-        color: #E5E7EB;
+        color: var(--text-primary);
         line-height: 1.2;
-        margin-bottom: 1rem;
-        letter-spacing: -0.01em;
+        margin-bottom: 1.25rem;
+        letter-spacing: -0.015em;
     }
 
-    /* Story prose */
+    /* ---------- Prose ---------- */
     .qo-prose {
         font-family: 'Inter', -apple-system, sans-serif;
         font-size: 16px;
-        color: #CBD5E1;
+        color: var(--text-primary);
         line-height: 1.65;
         margin-bottom: 1.25rem;
     }
     .qo-prose-quiet {
         font-family: 'Inter', -apple-system, sans-serif;
         font-size: 15px;
-        color: #94A3B8;
+        color: var(--text-secondary);
         line-height: 1.6;
         margin-bottom: 1.25rem;
     }
+    .qo-quote {
+        font-family: 'Inter', -apple-system, sans-serif;
+        font-size: 17px;
+        font-style: italic;
+        color: var(--text-primary);
+        line-height: 1.55;
+        padding: 0.5rem 0 0.5rem 1.25rem;
+        border-left: 2px solid var(--accent);
+        margin: 1.5rem 0;
+    }
 
-    /* Three-question framing strip */
+    /* ---------- The three checks ---------- */
     .qo-question-row {
         display: flex;
         gap: 0;
-        margin-bottom: 0.75rem;
+        margin-bottom: 0.85rem;
         align-items: baseline;
     }
     .qo-question-num {
         font-family: 'JetBrains Mono', 'Consolas', monospace;
         font-size: 13px;
-        color: #F26B1F;
-        margin-right: 1rem;
+        color: var(--accent);
+        margin-right: 1.25rem;
         flex-shrink: 0;
         font-weight: 600;
     }
     .qo-question-text {
         font-family: 'Inter', -apple-system, sans-serif;
         font-size: 16px;
-        color: #E5E7EB;
+        color: var(--text-primary);
         line-height: 1.5;
     }
 
-    /* Download cards */
+    /* ---------- Download cards ---------- */
     .qo-card {
-        background: #111827;
-        border: 1px solid #1F2937;
+        background: var(--surface);
+        border: 1px solid var(--border);
         border-radius: 6px;
         padding: 1.5rem 1.75rem 1.25rem 1.75rem;
         margin-bottom: 1rem;
     }
-    .qo-card-lite {
+    .qo-card-system {
         font-family: 'JetBrains Mono', 'Consolas', monospace;
-        font-size: 10px;
-        color: #F26B1F;
+        font-size: 11px;
+        color: var(--accent);
         letter-spacing: 1.5px;
         text-transform: uppercase;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.6rem;
     }
     .qo-card-title {
         font-family: 'Inter', -apple-system, sans-serif;
         font-size: 19px;
         font-weight: 600;
-        color: #E5E7EB;
-        margin-bottom: 0.3rem;
+        color: var(--text-primary);
+        margin-bottom: 0.4rem;
     }
     .qo-card-desc {
         font-family: 'Inter', -apple-system, sans-serif;
         font-size: 14px;
-        color: #94A3B8;
+        color: var(--text-secondary);
         line-height: 1.55;
         margin-bottom: 1.1rem;
     }
 
-    /* Download buttons */
+    /* ---------- Download buttons ---------- */
     .stDownloadButton button {
-        background: #1F2937 !important;
-        color: #E5E7EB !important;
-        border: 1px solid #374151 !important;
+        background: var(--btn-bg) !important;
+        color: var(--btn-text) !important;
+        border: 1px solid var(--btn-border) !important;
         font-family: 'JetBrains Mono', 'Consolas', monospace !important;
         font-size: 12px !important;
         letter-spacing: 1.2px !important;
@@ -181,94 +237,95 @@ st.markdown(
         transition: all 0.15s ease;
     }
     .stDownloadButton button:hover {
-        background: #F26B1F !important;
-        color: #0A0E1A !important;
-        border-color: #F26B1F !important;
+        background: var(--btn-bg-hover) !important;
+        color: var(--btn-text-hover) !important;
+        border-color: var(--btn-bg-hover) !important;
     }
 
-    /* Paid catalog row */
-    .qo-paid {
-        background: #0F172A;
-        border: 1px solid #1F2937;
-        border-left: 2px solid #F26B1F;
-        border-radius: 4px;
-        padding: 1rem 1.25rem;
-        margin-bottom: 0.75rem;
-    }
-    .qo-paid-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: baseline;
-        margin-bottom: 0.25rem;
-    }
-    .qo-paid-name {
-        font-family: 'Inter', -apple-system, sans-serif;
-        font-size: 16px;
-        font-weight: 600;
-        color: #E5E7EB;
-    }
-    .qo-paid-meta {
-        font-family: 'JetBrains Mono', 'Consolas', monospace;
-        font-size: 12px;
-        color: #94A3B8;
-        letter-spacing: 0.5px;
-    }
-    .qo-paid-desc {
-        font-family: 'Inter', -apple-system, sans-serif;
-        font-size: 13.5px;
-        color: #94A3B8;
-        line-height: 1.5;
-    }
-
-    /* CTA */
+    /* ---------- WhatsApp + outgrow CTA ---------- */
     .qo-cta-box {
-        background: #0F172A;
-        border: 1px solid #1F2937;
-        border-radius: 6px;
+        background: var(--surface-alt);
+        border: 1px solid var(--border);
+        border-left: 2px solid var(--accent);
+        border-radius: 4px;
         padding: 1.5rem 1.75rem;
-        margin-top: 1.5rem;
+        margin: 1.5rem 0;
     }
     .qo-cta-text {
         font-family: 'Inter', -apple-system, sans-serif;
         font-size: 15.5px;
-        color: #CBD5E1;
+        color: var(--text-primary);
         line-height: 1.55;
         margin-bottom: 0.75rem;
+    }
+    .qo-cta-row {
+        display: flex;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+        align-items: center;
+        margin-top: 0.75rem;
     }
     .qo-cta-link {
         font-family: 'JetBrains Mono', 'Consolas', monospace;
         font-size: 13px;
-        color: #F26B1F;
+        color: var(--accent);
         text-decoration: none;
-        letter-spacing: 1.2px;
+        letter-spacing: 1px;
     }
     .qo-cta-link:hover { text-decoration: underline; }
 
-    /* Trust signals */
-    .qo-trust {
-        background: transparent;
+    /* ---------- Metric badges ---------- */
+    .qo-metrics {
+        display: flex;
+        gap: 2.5rem;
+        justify-content: center;
+        flex-wrap: wrap;
         padding: 1.5rem 0;
         text-align: center;
-        font-family: 'JetBrains Mono', 'Consolas', monospace;
-        font-size: 12px;
-        color: #64748B;
-        letter-spacing: 0.5px;
-        line-height: 1.8;
     }
-    .qo-trust-number {
-        color: #E5E7EB;
-        font-weight: 600;
+    .qo-metric {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .qo-metric-num {
+        font-family: 'JetBrains Mono', 'Consolas', monospace;
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--text-primary);
+        line-height: 1;
+        letter-spacing: -0.02em;
+    }
+    .qo-metric-label {
+        font-family: 'JetBrains Mono', 'Consolas', monospace;
+        font-size: 10px;
+        color: var(--text-quiet);
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        margin-top: 0.4rem;
     }
 
-    /* Footer */
+    /* ---------- Footer ---------- */
     .qo-footer {
         font-family: 'Inter', -apple-system, sans-serif;
-        font-size: 12px;
-        color: #64748B;
+        font-size: 12.5px;
+        color: var(--text-quiet);
         margin-top: 2rem;
         line-height: 1.7;
     }
-    .qo-footer-strong { color: #94A3B8; font-weight: 600; }
+    .qo-footer-strong { color: var(--text-secondary); font-weight: 600; }
+    .qo-footer-quote {
+        font-style: italic;
+        color: var(--text-secondary);
+        margin: 1rem 0;
+        padding-left: 1rem;
+        border-left: 1px solid var(--border);
+    }
+    .qo-footer-link {
+        color: var(--accent);
+        text-decoration: none;
+    }
+    .qo-footer-link:hover { text-decoration: underline; }
     </style>
     """,
     unsafe_allow_html=True,
@@ -276,45 +333,45 @@ st.markdown(
 
 # --- HERO ------------------------------------------------------------------
 
-st.markdown('<div class="qo-eyebrow">The Quiet Operator</div>', unsafe_allow_html=True)
-st.markdown('<div class="qo-title">The Survivor\'s Toolkit</div>', unsafe_allow_html=True)
+st.markdown('<div class="qo-eyebrow">// THE_SURVIVORS_TOOLKIT</div>', unsafe_allow_html=True)
+st.markdown('<div class="qo-title">Three free spreadsheets.<br>Built by a trader, not a guru.</div>', unsafe_allow_html=True)
 st.markdown(
-    '<div class="qo-subtitle">Three free spreadsheets for Indian F&amp;O traders.<br>'
-    'Built by a trader, not a guru.</div>',
+    '<div class="qo-subtitle">'
+    'For Indian F&amp;O traders. Formulas baked in. Open in Excel or Google Sheets, '
+    'enter your numbers, the verdict tells you what to do.'
+    '</div>',
     unsafe_allow_html=True,
 )
 st.markdown('<div class="qo-rule"></div>', unsafe_allow_html=True)
 
 # --- STORY -----------------------------------------------------------------
 
-st.markdown('<div class="qo-section-eyebrow">// why these sheets exist</div>', unsafe_allow_html=True)
+st.markdown('<div class="qo-section-eyebrow">// WHY THESE EXIST</div>', unsafe_allow_html=True)
 st.markdown('<div class="qo-section-title">Thirteen years. Nine of them losing.</div>', unsafe_allow_html=True)
 
 st.markdown(
     '<div class="qo-prose">Not because I lacked strategies. I had too many. '
-    'I lost because every trade was buried under sizing math, risk checks, '
-    'journal entries, and exit rules my brain had to hold in real time. '
-    'I couldn\'t see the chart for the spreadsheet.</div>',
+    'I lost because every trade was buried under sizing math, risk checks, journal entries, '
+    'and exit rules my brain had to hold in real time. I couldn\'t see the chart for the spreadsheet.</div>',
     unsafe_allow_html=True,
 )
 st.markdown(
-    '<div class="qo-prose">So I learned to code from zero — not to become a '
-    'coder, but to put the attention back where it belongs. The first three '
-    'tools I built were these. What you\'re about to download are the lite '
-    'versions of those tools.</div>',
+    '<div class="qo-prose">So I learned to code from zero — not to become a coder, '
+    'but to put the attention back where it belongs. '
+    'The first three tools I built were these.</div>',
     unsafe_allow_html=True,
 )
+
 st.markdown(
-    '<div class="qo-prose-quiet">If you only fix three things in your trading process, '
-    'fix the three things these sheets check.</div>',
+    '<div class="qo-quote">Finance isn\'t creative writing. Ambiguity is expensive.</div>',
     unsafe_allow_html=True,
 )
 
 st.markdown('<div class="qo-rule-thin"></div>', unsafe_allow_html=True)
 
-# --- THREE QUESTIONS FRAMING -----------------------------------------------
+# --- THREE CHECKS ----------------------------------------------------------
 
-st.markdown('<div class="qo-section-eyebrow">// the three checks</div>', unsafe_allow_html=True)
+st.markdown('<div class="qo-section-eyebrow">// THE THREE CHECKS</div>', unsafe_allow_html=True)
 st.markdown('<div class="qo-section-title">Three sheets. Three questions you should answer before every trade.</div>', unsafe_allow_html=True)
 
 questions = [
@@ -335,19 +392,19 @@ st.markdown('<div class="qo-rule-thin"></div>', unsafe_allow_html=True)
 
 # --- DOWNLOAD CARDS --------------------------------------------------------
 
-st.markdown('<div class="qo-section-eyebrow">// download</div>', unsafe_allow_html=True)
+st.markdown('<div class="qo-section-eyebrow">// DOWNLOAD</div>', unsafe_allow_html=True)
 st.markdown('<div class="qo-section-title">The three sheets.</div>', unsafe_allow_html=True)
 st.markdown(
-    '<div class="qo-prose-quiet">Open in Excel or Google Sheets. The formulas are baked in. '
-    'Enter your numbers, the verdict tells you what to do.</div>',
+    '<div class="qo-prose-quiet">All three are free. No email gate. '
+    'No "enter your name and capital." Download, open, enter your numbers, read the verdict.</div>',
     unsafe_allow_html=True,
 )
 
 
-def _download_card(title: str, lite_of: str, description: str, filename: str, button_label: str) -> None:
+def _download_card(title: str, system_name: str, description: str, filename: str, button_label: str) -> None:
     st.markdown(
         f'<div class="qo-card">'
-        f'<div class="qo-card-lite">LITE OF — {lite_of}</div>'
+        f'<div class="qo-card-system">{system_name}</div>'
         f'<div class="qo-card-title">{title}</div>'
         f'<div class="qo-card-desc">{description}</div>'
         f'</div>',
@@ -370,108 +427,87 @@ def _download_card(title: str, lite_of: str, description: str, filename: str, bu
 
 
 _download_card(
-    title="Position Sizer Sheet",
-    lite_of="Risk Management Supervisor (₹2,999)",
+    title="Position Sizer",
+    system_name="POSITION_SIZER.XLSX",
     description=(
         "5 inputs — capital, max risk %, entry premium, stop premium, lot size. "
         "Output is the lot count that survives a full stop-out, plus a live verdict. "
         "12 seconds to use. The arithmetic that should run before every order."
     ),
     filename="position-sizer.xlsx",
-    button_label="DOWNLOAD  position-sizer.xlsx",
+    button_label="↓  POSITION_SIZER.XLSX",
 )
 
 _download_card(
     title="Risk of Ruin Calculator",
-    lite_of="Smart Portfolio Stats Generator (₹699)",
+    system_name="RISK_OF_RUIN.XLSX",
     description=(
         "Win rate, avg-win, avg-loss, risk per trade. Outputs the probability of ruin, "
-        "expected return curve, variance bands at 50 / 100 / 200 trades. Verdict tells "
-        "you whether your edge survives variance or your capital won't."
+        "expected return curve, variance bands at 50 / 100 / 200 trades. The verdict tells "
+        "you whether your edge survives variance or your capital gives out first."
     ),
     filename="risk-of-ruin-calculator.xlsx",
-    button_label="DOWNLOAD  risk-of-ruin-calculator.xlsx",
+    button_label="↓  RISK_OF_RUIN.XLSX",
 )
 
 _download_card(
     title="Trade Review Sheet",
-    lite_of="Smart Portfolio Stats Generator (₹699)",
+    system_name="TRADE_REVIEW.XLSX",
     description=(
         "Three-question weekly journal. Largest losing day, the position size at the trigger "
         "trade, the rule that existed (or didn't) in writing before. A bargaining-loop detector "
-        "built in. Rolls up into win rate, avg win, avg loss — feeds the Risk of Ruin Calculator."
+        "built in. Rolls up into win rate, avg win, avg loss — feeds the Risk of Ruin calculator."
     ),
     filename="trade-review.xlsx",
-    button_label="DOWNLOAD  trade-review.xlsx",
+    button_label="↓  TRADE_REVIEW.XLSX",
 )
 
 st.markdown('<div class="qo-rule-thin"></div>', unsafe_allow_html=True)
 
-# --- OUTGROW SECTION -------------------------------------------------------
+# --- METRICS ---------------------------------------------------------------
 
-st.markdown('<div class="qo-section-eyebrow">// when you outgrow these</div>', unsafe_allow_html=True)
-st.markdown('<div class="qo-section-title">The paid versions, in case the lite sheets stop being enough.</div>', unsafe_allow_html=True)
+st.markdown('<div class="qo-section-eyebrow">// DOCUMENTED RESULTS</div>', unsafe_allow_html=True)
+st.markdown('<div class="qo-section-title">From live production systems.</div>', unsafe_allow_html=True)
+
+st.markdown(
+    '<div class="qo-metrics">'
+    '<div class="qo-metric"><div class="qo-metric-num">13+</div>'
+    '<div class="qo-metric-label">YEARS<br>TRADING</div></div>'
+    '<div class="qo-metric"><div class="qo-metric-num">34</div>'
+    '<div class="qo-metric-label">SYSTEMS<br>SHIPPED</div></div>'
+    '<div class="qo-metric"><div class="qo-metric-num">209</div>'
+    '<div class="qo-metric-label">PAYING<br>REVIEWS</div></div>'
+    '<div class="qo-metric"><div class="qo-metric-num">&lt;50ms</div>'
+    '<div class="qo-metric-label">EXECUTION<br>LATENCY</div></div>'
+    '</div>',
+    unsafe_allow_html=True,
+)
+
+st.markdown('<div class="qo-rule-thin"></div>', unsafe_allow_html=True)
+
+# --- WHEN YOU OUTGROW THESE ------------------------------------------------
+
+st.markdown('<div class="qo-section-eyebrow">// WHEN YOU OUTGROW THESE</div>', unsafe_allow_html=True)
+st.markdown('<div class="qo-section-title">The full system catalog lives on my main site.</div>', unsafe_allow_html=True)
 
 st.markdown(
     '<div class="qo-prose-quiet">The three sheets above do roughly 90% of what the Survivor needs. '
-    'The other 10% is what these paid systems handle — multi-account routing, AI strategy '
-    'discovery, sub-second execution, the things you can\'t do in a spreadsheet.</div>',
+    'The other 10% — multi-account routing, AI strategy discovery, sub-second execution, '
+    'the things you can\'t do in a spreadsheet — lives in the 34-system catalog at the link below.</div>',
     unsafe_allow_html=True,
 )
 
-paid_products = [
-    {
-        "name": "Risk Management Supervisor",
-        "meta": "₹2,999  ·  4.5★  ·  42 reviews",
-        "desc": "The production version of the Position Sizer above. Nine checks before any order leaves your machine — capital tier, state tier, behaviour tier. Daily-loss kill switch built in.",
-    },
-    {
-        "name": "Powerful Riyan Options Engine",
-        "meta": "₹6,999  ·  4.6★  ·  52 reviews",
-        "desc": "Multi-account NIFTY options. AI strategy discovery. Unwind protection in 200 ms. For the trader who lost a Monday morning because the broker took 400 ms to confirm the stop.",
-    },
-    {
-        "name": "Enterprise Algo Execution Platform",
-        "meta": "₹12,999  ·  4.9★  ·  112 reviews",
-        "desc": "Full-stack execution platform. Python + Next.js + WebSocket order routing under broker rate-limits. For the trader running size across five accounts who needs sub-second deterministic execution.",
-    },
-]
-
-for p in paid_products:
-    st.markdown(
-        f'<div class="qo-paid">'
-        f'<div class="qo-paid-row">'
-        f'<div class="qo-paid-name">{p["name"]}</div>'
-        f'<div class="qo-paid-meta">{p["meta"]}</div>'
-        f'</div>'
-        f'<div class="qo-paid-desc">{p["desc"]}</div>'
-        f'</div>',
-        unsafe_allow_html=True,
-    )
-
-# --- CUSTOM BUILD CTA ------------------------------------------------------
-
 st.markdown(
-    '<div class="qo-cta-box">'
-    '<div class="qo-cta-text">If you want a custom system built for the way you actually trade — '
-    'multi-account, instrument-specific, broker-specific — DM me on X. Not a course. Not a subscription. '
-    'A tool built for your workflow.</div>'
-    '<a class="qo-cta-link" href="https://twitter.com/Disciplinetrad3" target="_blank">'
-    'DM →  @Disciplinetrad3</a>'
-    '</div>',
-    unsafe_allow_html=True,
-)
-
-st.markdown('<div class="qo-rule-thin"></div>', unsafe_allow_html=True)
-
-# --- TRUST SIGNALS ---------------------------------------------------------
-
-st.markdown(
-    '<div class="qo-trust">'
-    '<span class="qo-trust-number">24</span> trading systems built  '
-    '·  <span class="qo-trust-number">209</span> paying customer reviews '
-    'across the top four products  ·  <span class="qo-trust-number">13</span> years trading Indian F&amp;O'
-    '</div>',
+    f'<div class="qo-cta-box">'
+    f'<div class="qo-cta-text">Browse all 34 production systems — trading, AI, and enterprise. '
+    f'Or DM me on WhatsApp if you want a custom system built for your trading workflow. '
+    f'Not a course. Not a subscription. A tool built for the way you actually trade.</div>'
+    f'<div class="qo-cta-row">'
+    f'<a class="qo-cta-link" href="{MAIN_SITE}" target="_blank">→  sureshbalaraman.com</a>'
+    f'<a class="qo-cta-link" href="{WHATSAPP_URL}" target="_blank">→  WhatsApp +91 96774 77233</a>'
+    f'<a class="qo-cta-link" href="mailto:{EMAIL}">→  {EMAIL}</a>'
+    f'</div>'
+    f'</div>',
     unsafe_allow_html=True,
 )
 
@@ -480,12 +516,15 @@ st.markdown('<div class="qo-rule-thin"></div>', unsafe_allow_html=True)
 # --- FOOTER ----------------------------------------------------------------
 
 st.markdown(
-    '<div class="qo-footer">'
-    '<span class="qo-footer-strong">Educational only.</span> Not financial advice. '
-    'Build your own conviction.<br><br>'
-    'These three sheets are the lite versions of the paid systems I run for my own trading. '
-    'They are free because the discipline they enforce should be free. '
-    'If you find yourself reaching for what the sheets can\'t do — the paid versions are above.'
-    '</div>',
+    f'<div class="qo-footer">'
+    f'<div class="qo-footer-quote">Great systems aren\'t flashy. They\'re reliable, scalable, '
+    f'and quietly solve hard problems.</div>'
+    f'<span class="qo-footer-strong">Educational only.</span> Not financial advice. '
+    f'Build your own conviction.<br><br>'
+    f'These three sheets are the lite versions of the paid systems I run for my own trading. '
+    f'They\'re free because the discipline they enforce should be free. '
+    f'If you outgrow them, the full catalog is at '
+    f'<a class="qo-footer-link" href="{MAIN_SITE}" target="_blank">sureshbalaraman.com</a>.'
+    f'</div>',
     unsafe_allow_html=True,
 )
