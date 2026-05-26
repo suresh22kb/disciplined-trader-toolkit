@@ -80,18 +80,33 @@ st.markdown(
     footer { visibility: hidden; }
     header { visibility: hidden; }
 
-    /* ---------- Canvas ---------- */
+    /* ---------- Canvas (responsive container) ---------- */
     .stApp { background-color: var(--bg) !important; }
     .main .block-container {
-        max-width: 760px;
-        padding-top: 3.5rem;
-        padding-bottom: 4rem;
+        max-width: 760px !important;
+        padding-top: clamp(2rem, 5vw, 4rem) !important;
+        padding-bottom: clamp(2.5rem, 5vw, 4.5rem) !important;
+        padding-left: clamp(1rem, 4vw, 2rem) !important;
+        padding-right: clamp(1rem, 4vw, 2rem) !important;
+    }
+
+    /* Tablet+: a hair wider, still readable */
+    @media (min-width: 1024px) {
+        .main .block-container { max-width: 820px !important; }
+    }
+    /* Standard desktop (1440px+): wider for richer hero */
+    @media (min-width: 1440px) {
+        .main .block-container { max-width: 920px !important; }
+    }
+    /* Wide desktop (27-inch typical = 2560×1440): cap with breathing room */
+    @media (min-width: 1920px) {
+        .main .block-container { max-width: 1040px !important; }
     }
 
     /* ---------- Hero ---------- */
     .qo-eyebrow {
         font-family: 'JetBrains Mono', 'Consolas', monospace;
-        font-size: 11px;
+        font-size: clamp(10px, 1.1vw, 12px);
         letter-spacing: 2.5px;
         color: var(--accent);
         text-transform: uppercase;
@@ -99,7 +114,7 @@ st.markdown(
     }
     .qo-title {
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-        font-size: 44px;
+        font-size: clamp(30px, 5vw, 54px);
         font-weight: 700;
         color: var(--text-primary);
         line-height: 1.05;
@@ -108,7 +123,7 @@ st.markdown(
     }
     .qo-subtitle {
         font-family: 'Inter', -apple-system, sans-serif;
-        font-size: 18px;
+        font-size: clamp(15px, 1.6vw, 19px);
         color: var(--text-secondary);
         line-height: 1.5;
         margin-bottom: 2rem;
@@ -129,7 +144,7 @@ st.markdown(
     /* ---------- Section headers ---------- */
     .qo-section-eyebrow {
         font-family: 'JetBrains Mono', 'Consolas', monospace;
-        font-size: 10px;
+        font-size: clamp(9.5px, 1vw, 11px);
         letter-spacing: 2.5px;
         color: var(--accent);
         text-transform: uppercase;
@@ -137,7 +152,7 @@ st.markdown(
     }
     .qo-section-title {
         font-family: 'Inter', -apple-system, sans-serif;
-        font-size: 28px;
+        font-size: clamp(22px, 2.8vw, 32px);
         font-weight: 600;
         color: var(--text-primary);
         line-height: 1.2;
@@ -148,21 +163,21 @@ st.markdown(
     /* ---------- Prose ---------- */
     .qo-prose {
         font-family: 'Inter', -apple-system, sans-serif;
-        font-size: 16px;
+        font-size: clamp(15px, 1.5vw, 17px);
         color: var(--text-primary);
         line-height: 1.65;
         margin-bottom: 1.25rem;
     }
     .qo-prose-quiet {
         font-family: 'Inter', -apple-system, sans-serif;
-        font-size: 15px;
+        font-size: clamp(14px, 1.4vw, 16px);
         color: var(--text-secondary);
         line-height: 1.6;
         margin-bottom: 1.25rem;
     }
     .qo-quote {
         font-family: 'Inter', -apple-system, sans-serif;
-        font-size: 17px;
+        font-size: clamp(15px, 1.7vw, 19px);
         font-style: italic;
         color: var(--text-primary);
         line-height: 1.55;
@@ -188,7 +203,7 @@ st.markdown(
     }
     .qo-question-text {
         font-family: 'Inter', -apple-system, sans-serif;
-        font-size: 16px;
+        font-size: clamp(15px, 1.5vw, 17px);
         color: var(--text-primary);
         line-height: 1.5;
     }
@@ -198,7 +213,7 @@ st.markdown(
         background: var(--surface);
         border: 1px solid var(--border);
         border-radius: 6px;
-        padding: 1.5rem 1.75rem 1.25rem 1.75rem;
+        padding: clamp(1.1rem, 2.5vw, 1.75rem);
         margin-bottom: 1rem;
     }
     .qo-card-system {
@@ -211,14 +226,14 @@ st.markdown(
     }
     .qo-card-title {
         font-family: 'Inter', -apple-system, sans-serif;
-        font-size: 19px;
+        font-size: clamp(17px, 1.9vw, 21px);
         font-weight: 600;
         color: var(--text-primary);
         margin-bottom: 0.4rem;
     }
     .qo-card-desc {
         font-family: 'Inter', -apple-system, sans-serif;
-        font-size: 14px;
+        font-size: clamp(13.5px, 1.35vw, 15px);
         color: var(--text-secondary);
         line-height: 1.55;
         margin-bottom: 1.1rem;
@@ -248,49 +263,58 @@ st.markdown(
         border: 1px solid var(--border);
         border-left: 2px solid var(--accent);
         border-radius: 4px;
-        padding: 1.5rem 1.75rem;
+        padding: clamp(1.1rem, 2.5vw, 1.75rem);
         margin: 1.5rem 0;
     }
     .qo-cta-text {
         font-family: 'Inter', -apple-system, sans-serif;
-        font-size: 15.5px;
+        font-size: clamp(14.5px, 1.5vw, 17px);
         color: var(--text-primary);
         line-height: 1.55;
         margin-bottom: 0.75rem;
     }
     .qo-cta-row {
         display: flex;
-        gap: 1.5rem;
+        gap: clamp(0.5rem, 1.5vw, 1.5rem);
         flex-wrap: wrap;
         align-items: center;
         margin-top: 0.75rem;
     }
+    /* Mobile: stack the contact links vertically so they don't crowd */
+    @media (max-width: 540px) {
+        .qo-cta-row { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+    }
     .qo-cta-link {
         font-family: 'JetBrains Mono', 'Consolas', monospace;
-        font-size: 13px;
+        font-size: clamp(12px, 1.3vw, 14px);
         color: var(--accent);
         text-decoration: none;
         letter-spacing: 1px;
+        word-break: break-word;
     }
     .qo-cta-link:hover { text-decoration: underline; }
 
     /* ---------- Metric badges ---------- */
     .qo-metrics {
-        display: flex;
-        gap: 2.5rem;
-        justify-content: center;
-        flex-wrap: wrap;
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: clamp(0.75rem, 2vw, 2.5rem);
         padding: 1.5rem 0;
         text-align: center;
+    }
+    /* Mobile: 2x2 grid */
+    @media (max-width: 540px) {
+        .qo-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 1.5rem; }
     }
     .qo-metric {
         display: flex;
         flex-direction: column;
         align-items: center;
+        min-width: 0;
     }
     .qo-metric-num {
         font-family: 'JetBrains Mono', 'Consolas', monospace;
-        font-size: 28px;
+        font-size: clamp(22px, 3vw, 34px);
         font-weight: 700;
         color: var(--text-primary);
         line-height: 1;
@@ -298,17 +322,17 @@ st.markdown(
     }
     .qo-metric-label {
         font-family: 'JetBrains Mono', 'Consolas', monospace;
-        font-size: 10px;
+        font-size: clamp(9px, 0.9vw, 11px);
         color: var(--text-quiet);
         letter-spacing: 1.5px;
         text-transform: uppercase;
-        margin-top: 0.4rem;
+        margin-top: 0.5rem;
     }
 
     /* ---------- Footer ---------- */
     .qo-footer {
         font-family: 'Inter', -apple-system, sans-serif;
-        font-size: 12.5px;
+        font-size: clamp(12px, 1.2vw, 14px);
         color: var(--text-quiet);
         margin-top: 2rem;
         line-height: 1.7;
