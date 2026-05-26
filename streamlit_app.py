@@ -23,7 +23,7 @@ EMAIL = "suresh2kb@gmail.com"
 MAIN_SITE = "https://www.sureshbalaraman.com/"
 
 st.set_page_config(
-    page_title="The Survivor's Toolkit · Suresh Balaraman",
+    page_title="Trader Discipline System · Suresh Balaraman",
     page_icon=None,
     layout="centered",
     initial_sidebar_state="collapsed",
@@ -357,16 +357,35 @@ st.markdown(
 
 # --- HERO ------------------------------------------------------------------
 
-st.markdown('<div class="qo-eyebrow">// THE_SURVIVORS_TOOLKIT</div>', unsafe_allow_html=True)
-st.markdown('<div class="qo-title">Three free spreadsheets.<br>Built by a trader, not a guru.</div>', unsafe_allow_html=True)
+st.markdown('<div class="qo-eyebrow">// THE_TRADER_DISCIPLINE_SYSTEM</div>', unsafe_allow_html=True)
+st.markdown('<div class="qo-title">Three checks before every trade.<br>Free.</div>', unsafe_allow_html=True)
 st.markdown(
     '<div class="qo-subtitle">'
-    'For Indian F&amp;O traders. Formulas baked in. Open in Excel or Google Sheets, '
-    'enter your numbers, the verdict tells you what to do.'
+    'For Indian F&amp;O traders. The three spreadsheets that decide whether the next trade '
+    'survives a full stop-out, whether your edge survives variance, and whether a rule '
+    'existed before the order. Formulas baked in. Verdict on screen.'
     '</div>',
     unsafe_allow_html=True,
 )
 st.markdown('<div class="qo-rule"></div>', unsafe_allow_html=True)
+
+# Emotional hook — the 2 PM bargaining scene compressed
+st.markdown(
+    '<div class="qo-quote" style="margin-top:0;">'
+    'It\'s 2 PM. The morning was red. By 1 PM you were back to normal size. By 2 PM you were bigger. '
+    'The trade in front of you needs to win <strong>3x normal</strong> for you to be flat by close. '
+    'You haven\'t had a 3x-normal win all year.'
+    '</div>',
+    unsafe_allow_html=True,
+)
+st.markdown(
+    '<div class="qo-prose-quiet" style="margin-top:1rem;">'
+    'These sheets exist so the second sentence above never has to be true.'
+    '</div>',
+    unsafe_allow_html=True,
+)
+
+st.markdown('<div class="qo-rule-thin"></div>', unsafe_allow_html=True)
 
 # --- STORY -----------------------------------------------------------------
 
@@ -491,10 +510,23 @@ st.markdown('<div class="qo-rule-thin"></div>', unsafe_allow_html=True)
 # --- METRICS ---------------------------------------------------------------
 
 st.markdown('<div class="qo-section-eyebrow">// DOCUMENTED RESULTS</div>', unsafe_allow_html=True)
-st.markdown('<div class="qo-section-title">From live production systems.</div>', unsafe_allow_html=True)
+st.markdown('<div class="qo-section-title">A specific trader, an anonymous account.</div>', unsafe_allow_html=True)
 
 st.markdown(
-    '<div class="qo-metrics">'
+    '<div class="qo-prose">He blew two accounts averaging down. He didn\'t need a new strategy — '
+    'he had three he could run profitably. He needed the next-trade-up to not happen at 2 PM '
+    'after the morning was red. The third quarter on the paid version of these tools, the platform '
+    'rejected <strong>18% of his orders</strong>. He\'s still trading.</div>',
+    unsafe_allow_html=True,
+)
+st.markdown(
+    '<div class="qo-prose-quiet">The free sheets above are the diagnostic. '
+    'The paid system that did the rejecting is at the link below.</div>',
+    unsafe_allow_html=True,
+)
+
+st.markdown(
+    '<div class="qo-metrics" style="margin-top:1.5rem;">'
     '<div class="qo-metric"><div class="qo-metric-num">13+</div>'
     '<div class="qo-metric-label">YEARS<br>TRADING</div></div>'
     '<div class="qo-metric"><div class="qo-metric-num">34</div>'
